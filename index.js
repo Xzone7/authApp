@@ -5,6 +5,10 @@ const expressSession = require("express-session")({
   secret: "secret",
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    secure: false,
+    maxAge: 60000,
+  },
 });
 const passport = require("passport");
 const mongoose = require("mongoose");
@@ -66,8 +70,7 @@ app.get("/user", connectEnsureLogin.ensureLoggedIn(), (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  req.logout();
-  res.sendFile("html/logout.html", { root: __dirname });
+  req.logout(() => res.redirect("/login"));
 });
 
 const port = process.env.PORT || 3000;
